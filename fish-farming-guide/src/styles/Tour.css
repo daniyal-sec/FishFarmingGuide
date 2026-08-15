@@ -1,0 +1,92 @@
+/*
+  VANILLA CSS FOR ONBOARDING WALKTHROUGH
+  Simple, clean, and professional for student project evaluation.
+*/
+
+.custom-tour-tooltip {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  padding: 40px;
+  max-width: 500px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+}
+
+
+.custom-tour-title {
+  font-size: 1.25rem;
+
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+.custom-tour-content {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  color: #4b5563;
+}
+
+.custom-tour-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #f3f4f6;
+  padding-top: 16px;
+}
+
+.custom-tour-step-info {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.custom-tour-next-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.custom-tour-next-btn:hover {
+  background: #1d4ed8;
+}
+
+.custom-tour-skip-btn {
+  background: transparent;
+  color: #6b7280;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.custom-tour-skip-btn:hover {
+  color: #374151;
+}
+
+/* Force hide any beacons that might still try to show up */
+.react-joyride__beacon {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Ensure the spotlight "hole" is actually transparent */
+.react-joyride__spotlight {
+  background-color: transparent !important;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5) !important;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}

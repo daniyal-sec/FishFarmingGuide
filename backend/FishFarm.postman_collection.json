@@ -1,0 +1,1122 @@
+{
+	"info": {
+		"name": "Fish Farming Guide",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fullName\": \"Ali Khan\",\n    \"email\": \"ali@farm.com\",\n    \"password\": \"secure123\",\n    \"farmName\": \"Indus Valley Fish\",\n    \"province\": \"Sindh\",\n    \"district\": \"Thatta\"\n}"
+						},
+						"url": "http://localhost:5000/api/auth/signup"
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.token) {",
+									"    pm.globals.set(\"auth_token\", jsonData.token);",
+									"    pm.globals.set(\"user_id\", jsonData.user.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [{"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ali@farm.com\",\n    \"password\": \"secure123\"\n}"
+						},
+						"url": "http://localhost:5000/api/auth/login"
+					}
+				}
+			]
+		},
+        {
+			"name": "2. Region Management",
+			"item": [
+				{
+					"name": "Get All Regions",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+						"url": "http://localhost:5000/api/regions"
+					}
+				},
+				{
+					"name": "Get Region by ID",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+						"url": "http://localhost:5000/api/regions/1"
+					}
+				}
+			]
+		},
+
+
+
+		{
+    "name": "3. Farm Management",
+    "item": [
+        {
+            "name": "Get My Farm Details",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": "http://localhost:5000/api/farm/my-farm"
+            }
+        },
+        {
+            "name": "Get Farm Area Usage",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": "http://localhost:5000/api/farm/area-usage",
+                "description": "Calculates total vs used area and returns the remaining acreage and usage percentage."
+            }
+        },
+        {
+            "name": "Setup Farm",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"totalArea\": 15.5,\n    \"regionId\": 1\n}"
+                },
+                "url": "http://localhost:5000/api/farm/setup",
+                "description": "Initializes the farm and auto-calculates a 10% Nursery Pond."
+            }
+        },
+        {
+            "name": "Update Farm Details",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"totalArea\": 20.0,\n    \"regionId\": 2\n}"
+                },
+                "url": "http://localhost:5000/api/farm/update",
+                "description": "Updates total acreage or region. Backend will block updates if totalArea is less than current pond usage."
+            }
+        },
+        {
+            "name": "View Farm by ID",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": "http://localhost:5000/api/farm/view/{{farm_id}}",
+                "description": "Admin/Owner view of a specific FarmId."
+            }
+        },
+        {
+            "name": "Delete Farm",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": "http://localhost:5000/api/farm/{{farm_id}}",
+                "description": "Removes farm record. Ensure all associated ponds are handled first based on your DB constraints."
+            }
+        }
+    ]
+},
+		{
+			"name": "4. Pond Management",
+			"item": [
+				{
+					"name": "Get My Ponds",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+						"url": "http://localhost:5000/api/ponds"
+					}
+				},
+				{
+					"name": "Pond Advisor (Recommend)",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+						"url": {
+							"raw": "http://localhost:5000/api/ponds/recommend?acres=1.5&type=Concrete",
+							"query": [
+								{"key": "acres", "value": "1.5"},
+								{"key": "type", "value": "Concrete"}
+							]
+						}
+					}
+				},
+				{
+    "name": "Add New Pond",
+    "request": {
+        "method": "POST",
+        "header": [
+            {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+            },
+            {
+                "key": "Content-Type",
+                "value": "application/json"
+            }
+        ],
+        "body": {
+            "mode": "raw",
+            "raw": "{\n    \"FarmId\": 1,\n    \"PondName\": \"Nursery Pond 2\",\n    \"Stage\": \"Nursery\",\n    \"CultureType\": \"Monoculture\",\n    \"PondType\": \"Earthen\",\n    \"Size\": 0.25,\n    \"CultivationType\": \"Intensive\",\n    \"LengthFeet\": null,\n    \"WidthFeet\": null,\n    \"DepthFeet\": 5.5,\n    \"VolumeLiters\": null\n}"
+        },
+        "url": {
+            "raw": "http://localhost:5000/api/ponds",
+            "protocol": "http",
+            "host": [
+                "localhost"
+            ],
+            "port": "5000",
+            "path": [
+                "api",
+                "ponds"
+            ]
+        },
+        "description": "RegionId is automatically inherited from the Farm. Dimensions (Length, Width, Volume) will be auto-calculated if sent as null."
+    }
+},
+				{
+					"name": "Update Pond",
+					"request": {
+						"method": "PUT",
+						"header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"PondName\": \"Updated Nursery A\",\n    \"Stage\": \"Grow-out\",\n    \"Size\": 2.0,\n    \"PondType\": \"Concrete\"\n}"
+						},
+						"url": "http://localhost:5000/api/ponds/1"
+					}
+				},
+				{
+					"name": "Delete Pond",
+					"request": {
+						"method": "DELETE",
+						"header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+						"url": "http://localhost:5000/api/ponds/1"
+					}
+				},{
+    "name": "Get Pond Stats Summary",
+    "request": {
+        "method": "GET",
+        "header": [
+            {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+            }
+        ],
+        "url": {
+            "raw": "http://localhost:5000/api/ponds/stats/summary",
+            "protocol": "http",
+            "host": [
+                "localhost"
+            ],
+            "port": "5000",
+            "path": [
+                "api",
+                "ponds",
+                "stats",
+                "summary"
+            ]
+        },
+        "description": "Returns the total number of ponds and total acreage for the logged-in user (UserId 22)."
+    }
+}
+			]
+		},
+		{
+			"name": "5. Species Management",
+			"item": [
+				{
+					"name": "Get All Species",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+						"url": "http://localhost:5000/api/species"
+					}
+				},
+				{
+					"name": "Add Custom Species",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer {{auth_token}}"},
+							{"key": "Content-Type", "value": "application/json"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Name\": \"Rohu\",\n    \"ImageUrl\": \"https://example.com/rohu.jpg\",\n    \"MaxStockingDensity\": 12.0,\n    \"CompatibleRegions\": \"Punjab, Sindh\",\n    \"MinTemp\": 18,\n    \"MaxTemp\": 32,\n    \"MinPH\": 7.0,\n    \"MaxPH\": 8.5,\n    \"MinDO\": 5.0,\n    \"FingerlingSizeG\": 20,\n    \"MarketSizeKG\": 2.5,\n    \"HarvestTimeMonths\": 10\n}"
+						},
+						"url": "http://localhost:5000/api/species/add"
+					}
+				},
+				{
+					"name": "Check Compatibility",
+					"request": {
+						"method": "GET",
+						"header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+						"url": "http://localhost:5000/api/species/1/compatibility"
+					}
+				},
+				{
+					"name": "Ping Species Route",
+					"request": {
+						"method": "GET",
+						"url": "http://localhost:5000/api/species/ping"
+					}
+				}
+			]
+
+		},
+       {
+    "name": "6. Stocking Operations",
+    "item": [
+        {
+            "name": "Get Stocking Preview (Green Box Logic)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": {
+                    "raw": "http://localhost:5000/api/stocking/preview/:pondId/:speciesId?quantity=500",
+                    "protocol": "http",
+                    "host": ["localhost"],
+                    "port": "5000",
+                    "path": ["api", "stocking", "preview", ":pondId", ":speciesId"],
+                    "query": [
+                        { "key": "quantity", "value": "500", "description": "The amount the user is typing into the modal" }
+                    ],
+                    "variable": [
+                        { "key": "pondId", "value": "1" },
+                        { "key": "speciesId", "value": "2" }
+                    ]
+                },
+                "description": "Calculates: \n1. Current fish in pond\n2. New total (Current + Quantity)\n3. Max capacity based on Pond Stage/Type\n4. Utilization %"
+            }
+        },
+        {
+            "name": "Get Stocking Inventory",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": "http://localhost:5000/api/stocking",
+                "description": "Returns all stocking records owned by the authenticated user."
+            }
+        },
+        {
+            "name": "Add New Stock (Biological Advisor)",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"pondId\": 1,\n    \"speciesId\": 2,\n    \"quantity\": 400,\n    \"pricePerPiece\": 12.50,\n    \"currentSize\": 1.5,\n    \"targetSize\": 10.0,\n    \"stockingDate\": \"2026-02-08\"\n}"
+                },
+                "url": "http://localhost:5000/api/stocking/add",
+                "description": "Finalizes stocking. Logic checks density, diversity, and feeding zones before inserting UserId."
+            }
+        },
+        {
+            "name": "Transfer Batch (Nursery to Grow-out)",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"stockId\": 1,\n    \"toPondId\": 2\n}"
+                },
+                "url": "http://localhost:5000/api/stocking/transfer",
+                "description": "Updates CurrentPondId, Status, and RegionId. Restricted to records owned by UserId."
+            }
+        },
+        {
+            "name": "Update Growth Sampling",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"quantity\": 395,\n    \"currentSize\": 4.2,\n    \"targetSize\": 10.0\n}"
+                },
+                "url": "http://localhost:5000/api/stocking/:stockId",
+                "variable": [
+                    { "key": "stockId", "value": "1" }
+                ]
+            }
+        },
+        {
+            "name": "Delete Stocking Record",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": "http://localhost:5000/api/stocking/:stockId",
+                "variable": [
+                    { "key": "stockId", "value": "1" }
+                ]
+            }
+        }
+    ]
+},
+
+		{
+    "name": "7. Inventory Management",
+    "item": [
+        {
+            "name": "Add Inventory Entry",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {"key": "Authorization", "value": "Bearer {{auth_token}}"},
+                    {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"pondId\": 1,\n    \"speciesId\": 2,\n    \"quantity\": 1000,\n    \"weight\": 25.5,\n    \"cost\": 50.0,\n    \"batchNo\": \"B-2026-001\",\n    \"supplier\": \"Indus Hatchery\",\n    \"currentSize\": 2.5,\n    \"targetSize\": 15.0\n}"
+                },
+                "url": "http://localhost:5000/api/inventory/add"
+            }
+        },
+        {
+            "name": "Get All Inventory",
+            "request": {
+                "method": "GET",
+                "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+                "url": "http://localhost:5000/api/inventory"
+            }
+        },
+        {
+            "name": "Get Single Inventory Item",
+            "request": {
+                "method": "GET",
+                "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+                "url": "http://localhost:5000/api/inventory/1"
+            }
+        },
+        {
+            "name": "Get Dashboard Summary",
+            "request": {
+                "method": "GET",
+                "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+                "url": "http://localhost:5000/api/inventory/dashboard-summary"
+            }
+        },
+        {
+            "name": "Update Inventory",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {"key": "Authorization", "value": "Bearer {{auth_token}}"},
+                    {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"quantity\": 5500,\n    \"weight\": 2.0,\n    \"cost\": 12.50\n}"
+                },
+                "url": "http://localhost:5000/api/inventory/1"
+            }
+        },
+        {
+            "name": "Delete Inventory Item",
+            "request": {
+                "method": "DELETE",
+                "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+                "url": "http://localhost:5000/api/inventory/1"
+            }
+        },
+        {
+            "name": "Transfer Whole Pond",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {"key": "Authorization", "value": "Bearer {{auth_token}}"},
+                    {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"fromPondId\": 1,\n    \"toPondId\": 2\n}"
+                },
+                "url": "http://localhost:5000/api/inventory/transfer-whole-pond"
+            }
+        }
+    ]
+},
+{
+    "name": "8. Fertilizer Management",
+    "item": [
+        {
+            "name": "Get Fertilizer Recommendation",
+            "request": {
+                "method": "GET",
+                "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+                "url": "http://localhost:5000/api/fertilizers/recommendation/1/Semi-Intensive"
+            }
+        },
+        {
+            "name": "Log Fertilizer Application",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {"key": "Authorization", "value": "Bearer {{auth_token}}"},
+                    {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"pondId\": 1,\n    \"type\": \"Inorganic\",\n    \"product\": \"Urea\",\n    \"qty\": 12.5,\n    \"cost\": 1500.0,\n    \"remarks\": \"Standard monthly application for bloom maintenance.\"\n}"
+                },
+                "url": "http://localhost:5000/api/fertilizers/apply"
+            }
+        },
+        {
+            "name": "Get Pond Fertilizer History",
+            "request": {
+                "method": "GET",
+                "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+                "url": "http://localhost:5000/api/fertilizers/history/1"
+            }
+        },{
+    "name": "Update Fertilizer Log",
+    "request": {
+        "method": "PUT",
+        "header": [
+            {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+            },
+            {
+                "key": "Content-Type",
+                "value": "application/json"
+            }
+        ],
+        "body": {
+            "mode": "raw",
+            "raw": "{\n    \"qty\": 15.0,\n    \"cost\": 1800.00,\n    \"remarks\": \"Updated quantity after re-weighing.\"\n}"
+        },
+        "url": "http://localhost:5000/api/fertilizers/log/1",
+        "description": "Updates an existing fertilizer application log entry using the LogId."
+    }
+},
+{
+    "name": "Delete Fertilizer Log",
+    "request": {
+        "method": "DELETE",
+        "header": [
+            {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+            }
+        ],
+        "url": "http://localhost:5000/api/fertilizers/log/1",
+        "description": "Permanently removes a fertilizer log entry from the database."
+    }
+}
+    ]
+},
+
+{
+	"name": "9. Expense Management",
+	"item": [
+		{
+			"name": "Log New Expense",
+			"request": {
+				"method": "POST",
+				"header": [
+					{ "key": "Authorization", "value": "Bearer {{auth_token}}" },
+					{ "key": "Content-Type", "value": "application/json" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pondId\": 51,\n    \"category\": \"Labor\",\n    \"amount\": 5000.00,\n    \"description\": \"Cleaning and netting for Pond 51\"\n}"
+				},
+				"url": "http://localhost:5000/api/expenses/add",
+				"description": "Records a specific expense tied to a pond (Feed, Labor, etc.)."
+			}
+		},
+		{
+			"name": "Get Farm Expense Summary",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Summary contains GrandTotal\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.overall).to.have.property('GrandTotal');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{ "key": "Authorization", "value": "Bearer {{auth_token}}" }
+				],
+				"url": "http://localhost:5000/api/expenses/summary/total",
+				"description": "CRITICAL: Powers the 'Total Expenses' orange card on the main dashboard."
+			}
+		},
+		{
+			"name": "Get Expenses by Pond",
+			"request": {
+				"method": "GET",
+				"header": [
+					{ "key": "Authorization", "value": "Bearer {{auth_token}}" }
+				],
+				"url": "http://localhost:5000/api/expenses/:pondId",
+				"variable": [
+					{ "key": "pondId", "value": "51" }
+				],
+				"description": "Lists all expenses for a specific pond for the 'Recent Activity' or pond details view."
+			}
+		},
+		{
+			"name": "Update Expense",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{ "key": "Authorization", "value": "Bearer {{auth_token}}" },
+					{ "key": "Content-Type", "value": "application/json" }
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"category\": \"Electricity\",\n    \"amount\": 12500.50,\n    \"description\": \"Updated utility bill\"\n}"
+				},
+				"url": "http://localhost:5000/api/expenses/:expenseId",
+				"variable": [
+					{ "key": "expenseId", "value": "1" }
+				]
+			}
+		},
+		{
+			"name": "Delete Expense Record",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{ "key": "Authorization", "value": "Bearer {{auth_token}}" }
+				],
+				"url": "http://localhost:5000/api/expenses/:expenseId",
+				"variable": [
+					{ "key": "expenseId", "value": "1" }
+				],
+				"description": "Permanently deletes an expense record from the Expense_log table."
+			}
+		}
+	]
+},{
+    "name": "10. Feed Management",
+    "item": [
+        {
+            "name": "Get Feed Recommendation",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": "http://localhost:5000/api/feed/recommendation/1",
+                "description": "Calculates biomass based on fish size (L) and Condition Factor (K), then recommends daily feed quantity."
+            }
+        },
+        {
+            "name": "Log Feeding Activity",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"pondId\": 1,\n    \"speciesId\": 2,\n    \"feedType\": \"Floating Pellets (3mm)\",\n    \"quantity\": 12.5,\n    \"cost\": 2500.00\n}"
+                },
+                "url": "http://localhost:5000/api/feed/log"
+            }
+        },
+        {
+            "name": "Get Pond Feed History",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": "http://localhost:5000/api/feed/history/1"
+            }
+        },
+        {
+            "name": "Update Feeding Log",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"quantity\": 14.0,\n    \"cost\": 2800.00,\n    \"feedType\": \"Premium Growth Pellets\"\n}"
+                },
+                "url": "http://localhost:5000/api/feed/log/1"
+            }
+        },
+        {
+            "name": "Delete Feeding Log",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": "http://localhost:5000/api/feed/log/1"
+            }
+        }
+    ]
+},
+{
+    "name": "11. Water Quality Management",
+    "item": [
+        {
+            "name": "Get Critical Alerts (24h)",
+            "request": {
+                "method": "GET",
+                "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+                "url": "http://localhost:5000/api/water-quality/alerts/critical"
+            }
+        },
+        {
+            "name": "Log Water Metrics",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {"key": "Authorization", "value": "Bearer {{auth_token}}"},
+                    {"key": "Content-Type", "value": "application/json"}
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"PondId\": 1,\n    \"current_temp\": 28.5,\n    \"current_ph\": 7.2,\n    \"current_do\": 5.1,\n    \"current_ammonia\": 0.02\n}"
+                },
+                "url": "http://localhost:5000/api/water-quality/logs"
+            }
+        },{
+    "name": "Update Water Quality Thresholds",
+    "request": {
+        "method": "PUT",
+        "header": [
+            {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+            },
+            {
+                "key": "Content-Type",
+                "value": "application/json"
+            }
+        ],
+        "body": {
+            "mode": "raw",
+            "raw": "{\n    \"min_temp_celsius\": 22.0,\n    \"max_temp_celsius\": 30.0,\n    \"min_ph\": 6.5,\n    \"max_ph\": 8.5,\n    \"min_dissolved_oxygen_ppm\": 5.0,\n    \"max_ammonia_ppm\": 0.05\n}"
+        },
+        "url": {
+            "raw": "http://localhost:5000/api/water-quality/parameters/1/2",
+            "protocol": "http",
+            "host": [
+                "localhost"
+            ],
+            "port": "5000",
+            "path": [
+                "api",
+                "water-quality",
+                "parameters",
+                "1",
+                "2"
+            ]
+        },
+        "description": "Updates the safety thresholds for a specific region and species. Use this to adjust when critical alerts are triggered."
+    }
+},
+        {
+            "name": "Latest Farm Summary",
+            "request": {
+                "method": "GET",
+                "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+                "url": "http://localhost:5000/api/water-quality/latest-summary"
+            }
+        }
+    ]
+},
+{
+    "name": "12. Mortality Management",
+    "item": [
+        {
+            "name": "Add Mortality Log",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 201\", function () {",
+                            "    pm.response.to.have.status(201);",
+                            "});",
+                            "",
+                            "pm.test(\"Stock logically decreased\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.success).to.eql(true);",
+                            "    // We changed this to 'remainingStock' in the backend",
+                            "    pm.expect(jsonData).to.have.property('remainingStock');",
+                            "    console.log('Remaining fish after death: ' + jsonData.remainingStock);",
+                            "});",
+                            "",
+                            "pm.test(\"Check Gatekeeper Validation\", function () {",
+                            "    if (pm.response.code === 404 || pm.response.code === 400) {",
+                            "        var jsonData = pm.response.json();",
+                            "        pm.expect(jsonData.success).to.eql(false);",
+                            "    }",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"pondId\": 51,\n    \"speciesId\": 1,\n    \"quantity\": 5\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/mortality/add",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "mortality",
+                        "add"
+                    ]
+                },
+                "description": "Logs deaths and physically subtracts from Stocking. Checks if species exists in pond first. Returns remainingStock."
+            },
+            "response": []
+        },
+        {
+            "name": "Get Mortality Summary",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/mortality/summary/:pondId",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "mortality",
+                        "summary",
+                        ":pondId"
+                    ],
+                    "variable": [
+                        {
+                            "key": "pondId",
+                            "value": "51"
+                        }
+                    ]
+                }
+            },
+            "response": []
+        }
+    ]
+},
+{
+	"name": "13. Harvest Management",
+	"item": [
+		{
+			"name": "Add Harvest Log",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Harvest logically decreased stock\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.eql(true);",
+							"    pm.expect(jsonData).to.have.property('remainingStock');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"pondId\": 51,\n    \"speciesId\": 1,\n    \"quantity\": 20,\n    \"weight\": 15.5,\n    \"note\": \"First partial harvest\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5000/api/harvest/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"harvest",
+						"add"
+					]
+				},
+				"description": "Records harvest and physically subtracts from Stocking table using direct localhost URL."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Available Stock",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/api/harvest/available/:pondId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"harvest",
+						"available",
+						":pondId"
+					],
+					"variable": [
+						{
+							"key": "pondId",
+							"value": "51"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+},{
+    "name": "14. Live Activity Feed",
+    "item": [
+        {
+            "name": "Get Live Activity Feed",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test(\"Status code is 200\", function () {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Response is an array\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData).to.be.an('array');",
+                            "});",
+                            "",
+                            "pm.test(\"Verify feed item structure\", function () {",
+                            "    var jsonData = pm.response.json();",
+                            "    if(jsonData.length > 0) {",
+                            "        pm.expect(jsonData[0].Category).to.be.a('string');",
+                            "        pm.expect(jsonData[0].Description).to.be.a('string');",
+                            "        pm.expect(jsonData[0].ActivityTime).to.exist;",
+                            "        // Fixed logic for RelativeTime",
+                            "        var rt = jsonData[0].RelativeTime;",
+                            "        var isValid = rt === 'Just now' || rt.includes('ago');",
+                            "        pm.expect(isValid).to.be.true;",
+                            "    }",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{auth_token}}"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/api/activity/feed",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "api",
+                        "activity",
+                        "feed"
+                    ]
+                },
+                "description": "Fetches the latest 20 events for the logged-in user. Includes System items, Mortality, Feeding, and Harvests."
+            },
+            "response": []
+        }
+    ],
+    "description": "Real-time activity stream for the Dashboard Command Center."
+}
+,
+{
+    "name": "15. Marketplace",
+    "item": [
+        {
+            "name": "Marketplace Feed (Nearby Stock)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/api/marketplace?lat=31.5204&lng=74.3587",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "marketplace"],
+                    "query": [
+                        { "key": "lat", "value": "31.5204", "description": "Current Latitude for distance sorting" },
+                        { "key": "lng", "value": "74.3587", "description": "Current Longitude for distance sorting" }
+                    ]
+                },
+                "description": "Fetches all active stock (Nursery/Grown-out) currently in ponds. If lat/lng provides, sorts by distance."
+            }
+        }
+    ]
+},
+{
+    "name": "16. Knowledge Base (Info)",
+    "item": [
+        {
+            "name": "Get All Guides",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                ],
+                "url": "{{base_url}}/api/info/guides",
+                "description": "Fetches all KnowledgeGuides and nested KnowledgeSections grouped by TabCategory."
+            }
+        },
+        {
+            "name": "Add Knowledge Guide",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"tabCategory\": \"Management\",\n    \"title\": \"Water Quality Best Practices\",\n    \"displayOrder\": 1\n}"
+                },
+                "url": "{{base_url}}/api/info/guides"
+            }
+        },
+        {
+            "name": "Add Section to Guide",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{auth_token}}" },
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"guideId\": 1,\n    \"title\": \"Dealing with Ammonia spikes\",\n    \"contentText\": \"When ammonia levels exceed 0.05ppm, immediate water exchange is required...\",\n    \"displayOrder\": 1\n}"
+                },
+                "url": "{{base_url}}/api/info/sections"
+            }
+        }
+    ]
+}
+	]
+}
