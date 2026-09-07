@@ -5,12 +5,12 @@
 
 <p align="center">
   <a href="https://github.com/daniyal-sec/FishFarmingGuide">
-    <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0B486B,100:3B8686&height=280&section=header&text=%F0%9F%90%9F%20Aquaculture%20Management%20Platform&fontSize=34&fontColor=ffffff&fontAlignY=35&desc=Fish%20Farming%20Guide%20-%20Smart%20Aquaculture%2C%20Simplified&descAlignY=58&descSize=18&animation=fadeIn" width="100%" alt="Aquaculture Management Platform banner"/>
+    <img src="assets/hero-banner.svg" width="100%" alt="Aquaculture Management Platform banner: an animated deep-sea neon scene with glowing fish, rising bubbles, and a live sensor readout"/>
   </a>
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=600&size=20&duration=3200&pause=1200&color=1E9AB0&center=true&vCenter=true&multiline=true&repeat=true&width=850&height=90&lines=Empowering+Fish+Farmers+with+Smart+Technology;Pond+Planning+%7C+Stock+Management+%7C+Water+Quality;Bridging+Traditional+Farming+with+Data-Driven+Practices" alt="Typing SVG"/>
+  <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=600&size=20&duration=3200&pause=1200&color=22D3EE&center=true&vCenter=true&multiline=true&repeat=true&width=850&height=90&lines=Empowering+Fish+Farmers+with+Smart+Technology;Pond+Planning+%7C+Stock+Management+%7C+Water+Quality;Bridging+Traditional+Farming+with+Data-Driven+Practices" alt="Typing SVG"/>
 </p>
 
 <p align="center">
@@ -40,7 +40,7 @@ A comprehensive web-based aquaculture management platform developed as a Compute
 </p>
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=wave&color=0:3B8686,100:0B486B&height=20&section=header" width="100%" alt="divider"/>
+  <img src="assets/divider-wave.svg" width="100%" alt="Animated glowing wave divider with rising bubbles"/>
 </p>
 
 ## 📖 Table of Contents
@@ -60,7 +60,7 @@ A comprehensive web-based aquaculture management platform developed as a Compute
 - [📜 License](#license)
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=wave&color=0:3B8686,100:0B486B&height=20&section=header" width="100%" alt="divider"/>
+  <img src="assets/divider-wave.svg" width="100%" alt="Animated glowing wave divider with rising bubbles"/>
 </p>
 
 ## Project Overview
@@ -143,6 +143,11 @@ A comprehensive web-based aquaculture management platform developed as a Compute
 
 ```text
 FishFarmingGuide/
+├── assets/
+│   ├── hero-banner.svg
+│   ├── divider-wave.svg
+│   ├── divider-current.svg
+│   └── footer-banner.svg
 ├── backend/
 │   ├── config/
 │   ├── middleware/
@@ -170,6 +175,10 @@ FishFarmingGuide/
 ```
 
 <div align="right"><a href="#top">⬆ Back to Top</a></div>
+
+<p align="center">
+  <img src="assets/divider-wave.svg" width="100%" alt="Animated glowing wave divider with rising bubbles"/>
+</p>
 
 ## Application Screenshots
 
@@ -200,7 +209,7 @@ The application provides dedicated authentication and workflows for Admin, Farme
 <div align="right"><a href="#top">⬆ Back to Top</a></div>
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=shark&color=0:3B8686,100:0B486B&height=120" width="100%" alt="shark divider"/>
+  <img src="assets/divider-current.svg" width="100%" alt="Animated divider with swimming fish and swaying seaweed"/>
 </p>
 
 ## Installation and Setup
@@ -300,6 +309,10 @@ PORT=
 
 <div align="right"><a href="#top">⬆ Back to Top</a></div>
 
+<p align="center">
+  <img src="assets/divider-wave.svg" width="100%" alt="Animated glowing wave divider with rising bubbles"/>
+</p>
+
 ## Project Team
 
 This project was developed collaboratively as a Computer Science Final Year Project.
@@ -322,9 +335,9 @@ This project was developed collaboratively as a Computer Science Final Year Proj
 
 <br/>
 
-<p align="center"><em>🌱 Cultivating smarter, sustainable aquaculture — one pond at a time.</em></p>
+<p align="center"><em>🌱 Cultivating smarter, sustainable aquaculture - one pond at a time.</em></p>
 <p align="center">⭐ If this project inspired you, consider giving it a star!</p>
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:3B8686,100:0B486B&height=180&section=footer&text=Thank%20You%20for%20Visiting!%20%F0%9F%90%9F&fontSize=26&fontColor=ffffff&fontAlignY=65&animation=fadeIn" width="100%" alt="footer wave"/>
+  <img src="assets/footer-banner.svg" width="100%" alt="Thank you for visiting banner: animated deep-sea neon scene with glowing fish"/>
 </p>
